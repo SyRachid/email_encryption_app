@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}Déchiffrer un Message{% endblock %}
+
+{% block content %}
+<form id="decrypt-form">
+    <textarea id="encrypted_message" placeholder="Entrez le message chiffré ici..."></textarea>
+    <input type="text" id="key_id" placeholder="Entrez l'ID de Clé ici...">
+    <button type="button" onclick="decryptMessage()">Déchiffrer</button>
+</form>
+<div id="result-container">
+    <pre id="result"></pre>
+    <button id="copy-button" onclick="copyToClipboard()">Copier</button>
+</div>
+
+<script>
+    function decryptMessage() {
+        const encrypted_message = document.getElementById('encrypted_message').value;
+        const key_id = document.getElementById('key_id').value;
+        fetch('/perform_decrypt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'encrypted_message=' + encodeURIComponent(encrypted_message) + '&key_id=' + encodeURIComponent(key_id)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('result').innerText = 'Message déchiffré : ' + data.decrypted_message;
+            document.getElementById('result-container').style.display = 'block';
+        });
+    }
+
+    function copyToClipboard() {
+        const resultText = document.getElementById('result').innerText;
+        navigator.clipboard.writeText(resultText).then(() => {
+            alert('Texte copié dans le presse-papiers');
+        });
+    }
+</script>
+{% endblock %}

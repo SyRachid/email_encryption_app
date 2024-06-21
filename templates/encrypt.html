@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}Chiffrer un Message{% endblock %}
+
+{% block content %}
+<form id="encrypt-form">
+    <textarea id="message" placeholder="Entrez votre message ici..."></textarea>
+    <button type="button" onclick="encryptMessage()">Chiffrer</button>
+</form>
+<div id="result-container">
+    <pre id="result"></pre>
+    <button id="copy-button" onclick="copyToClipboard()">Copier</button>
+</div>
+
+<script>
+    function encryptMessage() {
+        const message = document.getElementById('message').value;
+        fetch('/perform_encrypt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'message=' + encodeURIComponent(message)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('result').innerText = 'Message chiffré : ' + data.encrypted_message + '\nID de Clé : ' + data.key_id;
+            document.getElementById('result-container').style.display = 'block';
+        });
+    }
+
+    function copyToClipboard() {
+        const resultText = document.getElementById('result').innerText;
+        navigator.clipboard.writeText(resultText).then(() => {
+            alert('Texte copié dans le presse-papiers');
+        });
+    }
+</script>
+{% endblock %}

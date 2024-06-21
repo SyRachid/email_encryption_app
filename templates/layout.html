@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Cryptage des Emails{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Cryptage des Emails</h1>
+        <div class="menu">
+            <a href="{{ url_for('index') }}">Accueil</a>
+            <a href="{{ url_for('encrypt_page') }}">Chiffrer un Message</a>
+            <a href="{{ url_for('decrypt_page') }}">Déchiffrer un Message</a>
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
